@@ -1,3 +1,5 @@
+#include<chrono>
+using namespace std ::chrono;
 // IR Sensor pins
 const int leftSensorPin = 12;
 const int rightSensorPin = 13;
@@ -61,10 +63,31 @@ void loop() {
 
   }
 }
-  void moveForward() {
+
+float speedsense(){
+  auto start = high_resolution_clock::now();
+  bool sensorstate = digitalRead();
+  bool val = sensorstate;
+  int i=0;
+  while(true){
+    sensorstate = digitalRead();
+    if(sensorstate != val){
+      i = 1;
+    }
+    if(i==1 && sensorstate == val){
+      break;
+    }
+  }
+  auto stop = high_resolution_clock::now();
+  auto duration = duration_cast<seconds>(start-stop);
+  return float(2*3.14/duration.count()); 
+}
+
+
+void moveForward() {
   // Motor 1
   digitalWrite(M1_plus, HIGH);
-  digitalWrite(M1_minus, LOW);
+  digitalWrite(M1_minus, LOW̥);
   analogWrite(M1_pwm, speed);
   
   // Motor 2
